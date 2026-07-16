@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'eclipse'
+    id 'idea'
     id 'org.springframework.boot' version '3.5.16'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -21,6 +23,20 @@ configurations {
     developmentOnly
     runtimeClasspath {
         extendsFrom developmentOnly
+    }
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
 }
 
