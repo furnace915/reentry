@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "han@han": true,
+    "han-core@han": true,
+    "han-planning@han": true,
+    "han-coding@han": true,
+    "han-github@han": true,
+    "han-reporting@han": true
+  },
+  "attribution": {
+    "commit": ""
+  }
+}

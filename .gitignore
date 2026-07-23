@@ -4,6 +4,10 @@ build/
 out/
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 # IntelliJ IDEA
 .idea/
@@ -11,13 +15,25 @@ out/
 *.iws
 *.ipr
 
-# VS Code
-.vscode/
-
-# Eclipse
+# Eclipse / STS
 .project
 .classpath
 .settings/
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
 
 # OS files
 .DS_Store
@@ -25,8 +41,20 @@ Thumbs.db
 
 # Logs
 *.log
+spring.log
+replay_pid*.log
+
+# Spring Boot devtools / debug artifacts
+.attach_pid*
 
 # Environment / local config
 .env
 *.local.properties
 application-local.yml
+application-*.local.yml
+
+# Spring Initializr scaffold doc (not needed once project is underway)
+HELP.md
+
+# Claude Code local settings
+.claude/settings.local.json

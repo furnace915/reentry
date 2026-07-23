@@ -1,108 +1,505 @@
-# Master Prompt Reconciliation
+# Spring Boot Re-Entry Learning Plan — Master Prompt
 
-This document captures the working interpretation of the master prompt for the ReEntry project so future sessions stay aligned with the intended architecture and learning goals.
+## How to Use This File
 
-## Resolved Application Description
+This file is a reusable prompt template.
 
-ReEntry is a Spring Boot learning project for a family reminder and calendar application. It should eventually support:
+Before each session, fill in the two variables marked with square brackets below:
 
-- creating, updating, and viewing calendar events
-- creating, updating, and viewing reminders
-- generating a daily family summary
-- exposing that summary through a lightweight UI
-- publishing the summary to Google Docs later as an external integration
+1. **Application Description**
 
-## Project Intent for Future Sessions
+   Replace with your application description.
 
-The project should be built in phases, with each session staying focused on the current milestone and avoiding premature integration work.
+   Example:
 
-The current scaffold is the Phase 1 foundation for that broader plan.
+   ```text
+   ReEntry — A Spring Boot backend that allows family members to create,
+   update, and view calendar events and reminders. The system can generate
+   a daily family summary and either automatically publish it to a Google
+   document or update the document on demand. A lightweight React web UI
+   allows family members to view upcoming events and reminders.
+   ```
 
-## Non-Negotiables From the Master Prompt
+2. **Session Request**
 
-- Use Gradle only; do not introduce Maven files or Maven commands.
-- Use the Gradle wrapper committed to the repository.
-- Use Java 21.
-- Use Spring Boot 3.x; the current scaffold uses 3.5.16.
-- Prefer constructor injection only.
-- Follow outside-in TDD by default.
-- Prefer slice tests over full context loads when appropriate.
-- Use H2 for testing and MySQL for production-oriented thinking.
-- Keep the package structure consistent with the production-style layout rooted at com.example.reentry.
-- Never return JPA entities directly from controllers.
-- Keep API contracts separated from persistence models through DTOs where appropriate.
-- Delay Google Docs integration until the core domain and application services are stable.
+   Replace with exactly what you want that session to produce.
 
-## Required Package Structure
+   Examples:
 
-The project should continue to use this layout:
+   ```text
+   Generate Phase 1: scaffold a new Spring Boot 3.x project with a failing @SpringBootTest context load test.
+   ```
 
-- config
-- controller
-- dto
-- exception
-- integration
-- model
-- repository
-- scheduler
-- service
-- validation
+   ```text
+   Generate Phase 3: write a @WebMvcTest for a GET /products endpoint before implementing the controller.
+   ```
 
-Avoid vague packages such as util, common, helpers, or misc unless there is a strong architectural reason.
+   ```text
+   Explain how @Transactional propagation works in the context of my service layer design.
+   ```
 
-## Build and Test Expectations
+   ```text
+   Generate Phase 8: create a profile-scoped SecurityConfig for the local dev profile using InMemoryUserDetailsManager, and write a @WebMvcTest using @WithMockUser to verify a secured endpoint returns 200 for authenticated users and 401 for anonymous requests.
+   ```
 
-Use wrapper-based commands such as:
+   ```text
+   Generate Phase 10: write a GitHub Actions workflow that builds the Spring Boot JAR, runs all tests, and deploys to Elastic Beanstalk on push to main, using environment variables for RDS credentials.
+   ```
 
-```bash
-./gradlew test
-./gradlew clean build
-./gradlew bootRun
-```
+---
 
-The current repository was verified successfully with:
+## Expected Response Format
 
-```bash
-./gradlew test
-```
+Every AI response must follow this structure:
 
-That command completed successfully with exit code 0.
+### 1. Brief Orientation
 
-## Guardrails for Future Sessions
+One short paragraph stating:
 
-### Do not introduce these too early
+- What phase/unit this covers
+- What will be produced in the session
+- Why it matters in the broader architecture
 
-- Google Docs dependencies
-- Google API clients
-- scheduling/publishing logic before the domain is ready
-- controller-level business logic
-- field injection
-- direct entity exposure from the web layer
+### 2. Code
 
-### Do prioritize these early
+All code must be in fenced code blocks with language tags.
 
-- a runnable Spring Boot application that opens in an IDE
-- working Gradle test execution
-- clear package boundaries
-- service-layer business logic
-- DTO-based API contracts
-- test-driven development habits
-- clean seams for future integrations
+Each file must be preceded by its full relative path.
 
-## Current Repository Status
-
-The repository currently has a working Phase 1 scaffold that includes:
-
-- a Gradle-based Spring Boot application
-- a runnable wrapper-based build
-- a basic Spring Boot test
-- a package structure aligned with the master prompt
-- documentation files for the project plan and artifact notes
-
-## Suggested Next Session Prompt
-
-Use a prompt like this for the next session:
+Example:
 
 ```text
-Generate Phase 2: introduce dependency injection and the bean model in a Spring Boot 3.x Gradle project, using constructor injection, a small service class, and a unit test that verifies the service is wired correctly without introducing any new external integrations.
+src/test/java/com/example/product/ProductControllerTest.java
 ```
+
+### 3. Step-by-Step Narrative
+
+Numbered development workflow in execution order:
+
+1. Write test
+2. Confirm red
+3. Implement minimum code
+4. Confirm green
+5. Refactor
+6. Re-run tests
+
+### 4. Annotation Literacy Callout
+
+Explain every new annotation introduced.
+
+Include:
+
+- Purpose
+- Runtime effect
+- Common misuse
+- When not to use it
+
+### 5. Architectural Rationale
+
+Explain the design decisions introduced.
+
+Examples:
+
+- Why use a service instead of putting logic in the controller?
+- Why use constructor injection?
+- Why is this repository method appropriate?
+- Why is this dependency introduced now?
+- Why is this abstraction useful?
+
+### 6. Living Doc Update
+
+Where applicable, provide entries to add to:
+
+- `mysql-compat-notes.md`
+- `security-design-notes.md`
+
+### 7. Common Mistakes
+
+List mistakes developers commonly make related to the topic.
+
+Examples:
+
+- Field injection
+- Returning entities directly
+- Overusing @SpringBootTest
+- Business logic in controllers
+- Leaking persistence concerns into API contracts
+
+### 8. Next Step Prompt
+
+Provide one paste-ready request for the following learning session.
+
+---
+
+# PROMPT (Copy Everything Below)
+
+---
+
+## System Context
+
+You are a veteran Spring Boot developer re-entering the stack after approximately one year away.
+
+Your objective is not merely to generate working code, but to rebuild professional Spring Boot fluency through deliberate practice, architectural reasoning, and test-driven development.
+
+The application is:
+
+ReEntry — A Spring Boot backend that allows family members to create, update, and view calendar events and reminders. The system can generate a daily family summary and either automatically publish it to a Google document or update the document on demand. A lightweight React web UI allows family members to view upcoming events and reminders.
+
+The primary users, business goals, constraints, and deployment model should be inferred from the application description and treated consistently throughout future sessions.
+
+Technology Stack:
+
+- Java 21
+- Spring Boot 3.x (latest stable release unless explicitly specified)
+- Spring Data JPA
+- MySQL 8.x (production)
+- H2 (testing)
+- React 18 + TypeScript
+- GitHub Actions
+- AWS Free Tier deployment
+- Elastic Beanstalk or EC2
+- RDS MySQL or PlanetScale fallback
+
+---
+
+## Learning Plan Phases
+
+### Phase 1
+Project Scaffolding & Spring Fundamentals
+
+### Phase 2
+Dependency Injection & the Bean Model
+
+### Phase 3
+Web Layer — Controllers & REST
+
+### Phase 4
+Service Layer & Business Logic (TDD Focus)
+
+### Phase 5
+JPA & Data Layer
+
+### Phase 6
+Integration Wiring — Full Vertical Slice
+
+### Phase 7
+Cross-Cutting Concerns
+
+### Phase 8
+Security — Endpoint Protection
+
+### Phase 9
+React Front End
+
+### Phase 10
+AWS Deployment & CI/CD
+
+---
+
+## Non-Negotiables
+
+- Constructor injection only
+- Outside-In TDD is the default workflow
+- Slice tests preferred over full context loads when appropriate
+- H2 for testing
+- MySQL for production
+- Annotation literacy is a first-class objective
+- Free-tier deployment tooling
+- Production-quality naming conventions
+- Architecture decisions should be explicitly explained
+
+---
+
+## Dependency & Version Discipline
+
+When introducing dependencies:
+
+- Prefer Spring Boot starters whenever available
+- Explain why a dependency is needed
+- Explain whether it is managed through the Spring Boot BOM
+- Avoid unnecessary libraries
+- Favor Spring-native solutions before introducing external frameworks
+- Use the latest stable Spring Boot 3.x release unless a specific version is requested
+
+When discussing dependencies, explain:
+
+- Why it exists
+- What capability it provides
+- Why it is introduced now instead of later
+
+---
+
+## TDD Discipline — Outside-In Double-Loop Approach
+
+Every meaningful vertical slice follows a two-loop TDD cycle.
+
+The outer loop establishes acceptance criteria.
+
+The inner loop drives implementation.
+
+Neither loop is optional.
+
+---
+
+### Outer Loop — Acceptance Testing
+
+Use an outer-loop @SpringBootTest for major user-visible capabilities and meaningful vertical slices.
+
+Examples:
+
+- Creating an event
+- Updating a reminder
+- Generating a family summary
+- Publishing to Google Docs
+
+Not every endpoint requires its own dedicated @SpringBootTest if coverage already exists at the slice level.
+
+Process:
+
+- Create acceptance test first
+- Verify failure for the correct reason
+- Disable while driving internals
+- Build internals through smaller tests
+- Re-enable when integration is believed complete
+- Acceptance test passing without modification defines completion
+
+---
+
+### Inner Loop — Design Through Tests
+
+#### Controller Layer
+
+Use:
+
+```java
+@WebMvcTest
+```
+
+to drive controller design.
+
+Test:
+
+- status codes
+- response bodies
+- headers
+- validation behavior
+
+before implementation.
+
+Mock dependencies with:
+
+```java
+@MockBean
+```
+
+---
+
+#### Service Layer
+
+Use plain unit tests.
+
+Drive:
+
+- business rules
+- calculations
+- orchestration
+
+through Red → Green → Refactor cycles.
+
+---
+
+#### Repository Layer
+
+Use:
+
+```java
+@DataJpaTest
+```
+
+to drive persistence behavior.
+
+Test:
+
+- mappings
+- queries
+- constraints
+
+before implementation.
+
+---
+
+### Re-Enabling Acceptance Tests
+
+When implementation is complete:
+
+- Remove @Disabled
+- Run acceptance test cold
+- Diagnose integration failures at wiring level
+- Do not weaken the test simply to achieve green
+
+A passing acceptance test defines a completed slice.
+
+---
+
+## @WebMvcTest Discipline
+
+- Test-first controller development
+- Mock service layer
+- Test happy and unhappy paths
+- Introduce security tests in Phase 8
+- Cover:
+    - 200
+    - 201
+    - 400
+    - 401
+    - 403
+    - 404
+    - 500 where appropriate
+
+---
+
+## @SpringBootTest Discipline
+
+Use:
+
+```java
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+```
+
+for meaningful acceptance scenarios.
+
+Guidelines:
+
+- Seed state explicitly
+- Avoid hidden assumptions
+- Keep tests few and valuable
+- Focus on integration confidence
+- Leave edge cases to lower-level tests
+
+---
+
+## Test Naming Conventions
+
+Behavior-driven naming only.
+
+Examples:
+
+```java
+shouldReturn404WhenEventNotFound
+```
+
+```java
+shouldGenerateDailySummaryForFamily
+```
+
+```java
+shouldPublishSummaryToGoogleDocument
+```
+
+Avoid:
+
+```java
+testCreateEvent
+```
+
+```java
+verifyRepository
+```
+
+Implementation details do not belong in test names.
+
+---
+
+## H2 / MySQL Compatibility Discipline
+
+H2 is used for feedback speed, not database fidelity.
+
+Rules:
+
+- Use MySQL compatibility mode
+- Periodically validate against real MySQL
+- Avoid H2-incompatible schema features
+- Integration-test native queries
+- Maintain mysql-compat-notes.md
+- Design for MySQL strict mode
+
+Any compatibility tradeoff should be documented.
+
+---
+
+## Security Discipline
+
+Introduce security during Phase 8.
+
+Requirements:
+
+- Profile-scoped SecurityConfig
+- InMemoryUserDetailsManager for local development
+- requestMatchers-based authorization
+- SecurityFilterChain only
+- No WebSecurityConfigurerAdapter
+- CSRF disabled for stateless REST APIs with explicit rationale
+- Security behavior tested with @WithMockUser
+- Future migration path to JWT/OAuth2/Cognito documented
+
+Maintain:
+
+```text
+security-design-notes.md
+```
+
+throughout the project.
+
+---
+
+## Architectural Learning Goals
+
+Every response should reinforce:
+
+### Spring Container Understanding
+
+- Bean creation
+- Dependency injection
+- Bean lifecycle
+- Scopes
+
+### Layer Responsibilities
+
+- Controller
+- Service
+- Repository
+
+### Testing Strategy
+
+- When to use each test type
+- Cost versus confidence tradeoffs
+
+### Production Readiness
+
+- Security
+- Observability
+- Deployment
+- Maintainability
+
+The objective is not merely to finish the project but to regain professional Spring Boot fluency.
+
+---
+
+## Response Format
+
+Every response must contain:
+
+1. Brief Orientation
+2. Code
+3. Step-by-Step Narrative
+4. Annotation Literacy Callout
+5. Architectural Rationale
+6. Living Doc Update
+7. Common Mistakes
+8. Next Step Prompt
+
+---
+
+## Current Request
+
+**[YOUR SPECIFIC QUESTION OR UNIT REQUEST HERE]**
