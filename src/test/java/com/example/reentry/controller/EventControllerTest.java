@@ -12,6 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -39,8 +40,9 @@ class EventControllerTest {
                 "Annual checkup",
                 startTime,
                 endTime);
+        UUID savedEventId = UUID.fromString("11111111-1111-1111-1111-111111111111");
         EventResponse savedEvent = new EventResponse(
-                "abc-123",
+                savedEventId,
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
@@ -52,8 +54,8 @@ class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/api/events/abc-123"))
-                .andExpect(jsonPath("$.id").value("abc-123"))
+                .andExpect(header().string("Location", "http://localhost/api/events/" + savedEventId))
+                .andExpect(jsonPath("$.id").value(savedEventId.toString()))
                 .andExpect(jsonPath("$.title").value("Dentist appointment"))
                 .andExpect(jsonPath("$.description").value("Annual checkup"));
     }

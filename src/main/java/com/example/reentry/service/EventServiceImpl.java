@@ -12,7 +12,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse createEvent(CreateEventRequest request) {
         return new EventResponse(
-                UUID.randomUUID().toString(),
+                UUID.randomUUID(),
                 request.title(),
                 request.description(),
                 request.startTime(),
