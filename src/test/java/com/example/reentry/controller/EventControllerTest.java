@@ -79,4 +79,22 @@ class EventControllerTest {
 
         verify(eventService, never()).createEvent(any(CreateEventRequest.class));
     }
+
+    @Test
+    void shouldReturn400WhenStartTimeIsBlank() throws Exception {
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = LocalDateTime.of(2026, 8, 1, 11, 0);
+        CreateEventRequest request = new CreateEventRequest(
+                "Valid Title",
+                "Annual checkup",
+                startTime,
+                endTime);
+
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(eventService, never()).createEvent(any(CreateEventRequest.class));
+    }
 }

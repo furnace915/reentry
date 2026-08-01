@@ -1,12 +1,13 @@
 package com.example.reentry.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
 public record CreateEventRequest(
         @NotBlank String title,
         String description,
-        LocalDateTime startTime,
+        @NotNull LocalDateTime startTime,
         LocalDateTime endTime) {
 }
