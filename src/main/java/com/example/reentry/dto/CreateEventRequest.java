@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record CreateEventRequest(
-        @NotBlank String title,
+        @NotBlank String name,
         String description,
         @NotNull LocalDateTime startTime,
         @NotNull LocalDateTime endTime) {
