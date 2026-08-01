@@ -11,6 +11,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventResponse createEvent(CreateEventRequest request) {
+        if (request.endTime().isBefore(request.startTime())) {
+            throw new IllegalArgumentException("End time cannot be before start time");
+        }
         return new EventResponse(
                 UUID.randomUUID(),
                 request.title(),
