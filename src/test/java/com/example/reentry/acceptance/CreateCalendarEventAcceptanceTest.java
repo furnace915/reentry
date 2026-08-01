@@ -2,12 +2,12 @@ package com.example.reentry.acceptance;
 
 import com.example.reentry.dto.CreateEventRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class CreateCalendarEventAcceptanceTest {
 
     @Autowired
@@ -26,7 +27,6 @@ class CreateCalendarEventAcceptanceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Disabled("driving internals via inner-loop tests")
     @Test
     void shouldCreateCalendarEventForFamily() throws Exception {
         LocalDateTime startTime = LocalDateTime.of(2026, 8, 1, 10, 0);
