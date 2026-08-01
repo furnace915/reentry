@@ -3,6 +3,7 @@ package com.example.reentry.controller;
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
 import com.example.reentry.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class EventController {
 
 
     @PostMapping("/api/events")
-    public ResponseEntity<EventResponse> createEvent(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid CreateEventRequest request) {
 
         EventResponse savedEvent = eventService.createEvent(request);
 

@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -58,5 +60,23 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.id").value(savedEventId.toString()))
                 .andExpect(jsonPath("$.title").value("Dentist appointment"))
                 .andExpect(jsonPath("$.description").value("Annual checkup"));
+    }
+
+    @Test
+    void shouldReturn400WhenTitleIsBlank() throws Exception {
+        LocalDateTime startTime = LocalDateTime.of(2026, 8, 1, 10, 0);
+        LocalDateTime endTime = LocalDateTime.of(2026, 8, 1, 11, 0);
+        CreateEventRequest request = new CreateEventRequest(
+                "",
+                "Annual checkup",
+                startTime,
+                endTime);
+
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(eventService, never()).createEvent(any(CreateEventRequest.class));
     }
 }
