@@ -4,14 +4,16 @@ import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EventServiceImpl implements EventService {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+
+    public EventServiceImpl(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @Override
     public EventResponse createEvent(CreateEventRequest request) {

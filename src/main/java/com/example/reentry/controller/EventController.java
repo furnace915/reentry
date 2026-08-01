@@ -4,7 +4,6 @@ import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
 import com.example.reentry.service.EventService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +15,11 @@ import java.net.URI;
 @RestController
 public class EventController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @PostMapping("/api/events")
     public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid CreateEventRequest request) {
