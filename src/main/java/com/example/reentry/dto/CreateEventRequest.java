@@ -9,5 +9,5 @@ public record CreateEventRequest(
         @NotBlank String title,
         String description,
         @NotNull LocalDateTime startTime,
-        LocalDateTime endTime) {
+        @NotNull LocalDateTime endTime) {
 }
