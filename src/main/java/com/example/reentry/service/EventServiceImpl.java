@@ -21,8 +21,8 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("End time cannot be before start time");
         }
 
-        Event event = new Event(request.name(), request.description(), request.startTime(), request.endTime());
-        Event savedEvent = eventRepository.save(event);
+        Event eventToSave = new Event(request.name(), request.description(), request.startTime(), request.endTime());
+        Event savedEvent = eventRepository.save(eventToSave);
 
         return new EventResponse(
                 savedEvent.getId(),
