@@ -6,6 +6,8 @@ import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class EventServiceImpl implements EventService {
 
@@ -30,5 +32,10 @@ public class EventServiceImpl implements EventService {
                 savedEvent.getDescription(),
                 savedEvent.getStartTime(),
                 savedEvent.getEndTime());
+    }
+
+    @Override
+    public EventResponse getEventById(UUID id) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

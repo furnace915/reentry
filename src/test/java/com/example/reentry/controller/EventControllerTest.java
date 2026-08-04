@@ -2,6 +2,7 @@ package com.example.reentry.controller;
 
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
+import com.example.reentry.exception.EventNotFoundException;
 import com.example.reentry.service.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -133,5 +135,38 @@ class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn200WithEventWhenFound() throws Exception {
+        UUID eventId = UUID.fromString("11111111-1111-1111-1111-111111111111");
+        LocalDateTime startTime = LocalDateTime.of(2026, 8, 1, 10, 0);
+        LocalDateTime endTime = LocalDateTime.of(2026, 8, 1, 11, 0);
+        EventResponse existingEvent = new EventResponse(
+                eventId,
+                "Dentist appointment",
+                "Annual checkup",
+                startTime,
+                endTime);
+
+        when(eventService.getEventById(eventId)).thenReturn(existingEvent);
+
+        mockMvc.perform(get("/api/events/{id}", eventId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(eventId.toString()))
+                .andExpect(jsonPath("$.name").value("Dentist appointment"))
+                .andExpect(jsonPath("$.description").value("Annual checkup"));
+    }
+
+    @Test
+    void shouldReturn404WhenEventNotFound() throws Exception {
+        UUID eventId = UUID.fromString("11111111-1111-1111-1111-111111111111");
+        String expectedMessage = "Event not found: " + eventId;
+
+        when(eventService.getEventById(eventId)).thenThrow(new EventNotFoundException(expectedMessage));
+
+        mockMvc.perform(get("/api/events/{id}", eventId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(expectedMessage));
     }
 }

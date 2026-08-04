@@ -5,12 +5,11 @@ import com.example.reentry.dto.EventResponse;
 import com.example.reentry.service.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 public class EventController {
@@ -33,5 +32,12 @@ public class EventController {
                 .toUri();
 
         return ResponseEntity.created(location).body(savedEvent);
+    }
+
+    @GetMapping("/api/events/{id}")
+    public ResponseEntity<EventResponse> getEventById(@PathVariable UUID id) {
+
+        var foundEvent = eventService.getEventById(id);
+        return ResponseEntity.ok(foundEvent);
     }
 }
