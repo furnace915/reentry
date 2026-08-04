@@ -58,7 +58,7 @@ class EventControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/events/" + savedEventId))
                 .andExpect(jsonPath("$.id").value(savedEventId.toString()))
-                .andExpect(jsonPath("$.title").value("Dentist appointment"))
+                .andExpect(jsonPath("$.name").value("Dentist appointment"))
                 .andExpect(jsonPath("$.description").value("Annual checkup"));
     }
 

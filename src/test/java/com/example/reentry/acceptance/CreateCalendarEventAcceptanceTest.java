@@ -43,7 +43,7 @@ class CreateCalendarEventAcceptanceTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/events/")))
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.title").value("Dentist appointment"))
+                .andExpect(jsonPath("$.name").value("Dentist appointment"))
                 .andExpect(jsonPath("$.description").value("Annual checkup"));
     }
 }
