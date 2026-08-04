@@ -2,10 +2,12 @@ package com.example.reentry.service;
 
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
+import com.example.reentry.exception.EventNotFoundException;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +37,18 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getEventById(UUID id) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public EventResponse getEventById(UUID eventId) {
+        Optional<Event> foundEvent = eventRepository.findById(eventId);
+        
+        if (foundEvent.isPresent()) {
+            return new EventResponse(
+                    foundEvent.get().getId(),
+                    foundEvent.get().getName(),
+                    foundEvent.get().getDescription(),
+                    foundEvent.get().getStartTime(),
+                    foundEvent.get().getEndTime());
+
+        }
+        throw new EventNotFoundException("Event with id " + eventId + " not found");
     }
 }

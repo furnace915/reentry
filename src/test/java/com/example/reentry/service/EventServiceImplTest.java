@@ -2,6 +2,7 @@ package com.example.reentry.service;
 
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
+import com.example.reentry.exception.EventNotFoundException;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,5 +72,36 @@ class EventServiceImplTest {
                 .returns(request.description(), EventResponse::description)
                 .returns(request.startTime(), EventResponse::startTime)
                 .returns(request.endTime(), EventResponse::endTime);
+    }
+
+    @Test
+    void shouldReturnEventWhenFound() {
+        UUID eventId = UUID.randomUUID();
+        Event existingEvent = new Event(
+                "Dentist appointment",
+                "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0),
+                LocalDateTime.of(2026, 8, 1, 11, 0));
+        ReflectionTestUtils.setField(existingEvent, "id", eventId);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
+
+        EventResponse actual = eventService.getEventById(eventId);
+
+        assertThat(actual)
+                .returns(eventId, EventResponse::id)
+                .returns(existingEvent.getName(), EventResponse::name)
+                .returns(existingEvent.getDescription(), EventResponse::description)
+                .returns(existingEvent.getStartTime(), EventResponse::startTime)
+                .returns(existingEvent.getEndTime(), EventResponse::endTime);
+    }
+
+    @Test
+    void shouldThrowEventNotFoundExceptionWhenEventDoesNotExist() {
+        UUID eventId = UUID.randomUUID();
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> eventService.getEventById(eventId));
     }
 }
