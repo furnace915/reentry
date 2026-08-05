@@ -104,4 +104,33 @@ class EventServiceImplTest {
 
         assertThrows(EventNotFoundException.class, () -> eventService.getEventById(eventId));
     }
+
+    @Test
+    void shouldUpdateExistingEvent() {
+        UUID eventId = UUID.randomUUID();
+        Event existingEvent = new Event(
+                "Dentist appointment",
+                "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0),
+                LocalDateTime.of(2026, 8, 1, 11, 0));
+        ReflectionTestUtils.setField(existingEvent, "id", eventId);
+
+        CreateEventRequest updateRequest = new CreateEventRequest(
+                "Dentist appointment (rescheduled)",
+                "Annual checkup - moved a day",
+                LocalDateTime.of(2026, 8, 2, 14, 0),
+                LocalDateTime.of(2026, 8, 2, 15, 0));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
+        when(eventRepository.save(any(Event.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        EventResponse actual = eventService.updateEvent(eventId, updateRequest);
+
+        assertThat(actual)
+                .returns(eventId, EventResponse::id)
+                .returns(updateRequest.name(), EventResponse::name)
+                .returns(updateRequest.description(), EventResponse::description)
+                .returns(updateRequest.startTime(), EventResponse::startTime)
+                .returns(updateRequest.endTime(), EventResponse::endTime);
+    }
 }
