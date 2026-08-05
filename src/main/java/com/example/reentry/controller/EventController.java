@@ -40,4 +40,11 @@ public class EventController {
         var foundEvent = eventService.getEventById(id);
         return ResponseEntity.ok(foundEvent);
     }
+
+    @PutMapping("api/events/{id}")
+    public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID id, @RequestBody @Valid CreateEventRequest request) {
+
+        var updatedEvent = eventService.updateEvent(id, request);
+        return ResponseEntity.ok(updatedEvent);
+    }
 }

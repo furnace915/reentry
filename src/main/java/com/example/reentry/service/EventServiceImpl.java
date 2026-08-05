@@ -46,4 +46,9 @@ public class EventServiceImpl implements EventService {
                         event.getEndTime()))
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + eventId + " not found"));
     }
+
+    @Override
+    public EventResponse updateEvent(UUID id, CreateEventRequest request) {
+        return null;
+    }
 }
