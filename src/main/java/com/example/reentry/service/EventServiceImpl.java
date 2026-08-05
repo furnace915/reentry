@@ -7,7 +7,6 @@ import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,27 +49,21 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventResponse updateEvent(UUID id, CreateEventRequest request) {
+        Event existingEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event with id " + id + " not found"));
 
-        Optional<Event> existingEvent = eventRepository.findById(id);
+        existingEvent.setName(request.name());
+        existingEvent.setDescription(request.description());
+        existingEvent.setStartTime(request.startTime());
+        existingEvent.setEndTime(request.endTime());
 
-        if (existingEvent.isPresent()) {
-            Event updatedEvent = existingEvent.get();
-            updatedEvent.setName(request.name());
-            updatedEvent.setDescription(request.description());
-            updatedEvent.setStartTime(request.startTime());
-            updatedEvent.setEndTime(request.endTime());
+        Event savedEvent = eventRepository.save(existingEvent);
 
-            Event savedEvent = eventRepository.save(updatedEvent);
-
-            return new EventResponse(
-                    savedEvent.getId(),
-                    savedEvent.getName(),
-                    savedEvent.getDescription(),
-                    savedEvent.getStartTime(),
-                    savedEvent.getEndTime());
-        }
-        
-        return null;
-
+        return new EventResponse(
+                savedEvent.getId(),
+                savedEvent.getName(),
+                savedEvent.getDescription(),
+                savedEvent.getStartTime(),
+                savedEvent.getEndTime());
     }
 }

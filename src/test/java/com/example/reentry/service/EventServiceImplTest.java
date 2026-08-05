@@ -133,4 +133,18 @@ class EventServiceImplTest {
                 .returns(updateRequest.startTime(), EventResponse::startTime)
                 .returns(updateRequest.endTime(), EventResponse::endTime);
     }
+
+    @Test
+    void shouldThrowEventNotFoundExceptionWhenUpdatingNonexistentEvent() {
+        UUID eventId = UUID.randomUUID();
+        CreateEventRequest updateRequest = new CreateEventRequest(
+                "Dentist appointment (rescheduled)",
+                "Annual checkup - moved a day",
+                LocalDateTime.of(2026, 8, 2, 14, 0),
+                LocalDateTime.of(2026, 8, 2, 15, 0));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> eventService.updateEvent(eventId, updateRequest));
+    }
 }
