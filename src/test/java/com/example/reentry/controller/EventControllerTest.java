@@ -19,8 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EventController.class)
@@ -168,5 +167,54 @@ class EventControllerTest {
         mockMvc.perform(get("/api/events/{id}", eventId))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(expectedMessage));
+    }
+
+    @Test
+    void shouldThrow404NotFoundExceptionWhenEventNotFoundExceptionThrown() throws Exception {
+        UUID eventId = UUID.randomUUID();
+        String expectedMessage = "Event not found: " + eventId;
+
+        CreateEventRequest eventRequest = new CreateEventRequest(
+                "Updated Event",
+                "Updated Description",
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1)
+        );
+
+        when(eventService.updateEvent(eventId, eventRequest)).thenThrow(new EventNotFoundException(expectedMessage));
+
+        mockMvc.perform(put("/api/events/{id}", eventId)
+                        .content(objectMapper.writeValueAsString(eventRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(expectedMessage));
+    }
+
+    @Test
+    void shouldReturn200WithUpdatedEventWhenEventUpdated() throws Exception {
+        UUID eventId = UUID.randomUUID();
+        LocalDateTime startTime = LocalDateTime.now();
+        LocalDateTime endTime = startTime.plusHours(1);
+        CreateEventRequest updateRequest = new CreateEventRequest(
+                "Updated Event",
+                "Updated Description",
+                startTime,
+                endTime);
+        EventResponse updatedEvent = new EventResponse(
+                eventId,
+                "Updated Event",
+                "Updated Description",
+                startTime,
+                endTime);
+
+        when(eventService.updateEvent(eventId, updateRequest)).thenReturn(updatedEvent);
+
+        mockMvc.perform(put("/api/events/{id}", eventId)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(eventId.toString()))
+                .andExpect(jsonPath("$.name").value("Updated Event"))
+                .andExpect(jsonPath("$.description").value("Updated Description"));
     }
 }
