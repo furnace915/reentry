@@ -3,6 +3,7 @@ package com.example.reentry.service;
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
 import com.example.reentry.exception.EventNotFoundException;
+import com.example.reentry.mapper.EventMapper;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import java.util.UUID;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
 
-    public EventServiceImpl(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
+        this.eventMapper = eventMapper;
     }
 
     @Override
@@ -24,47 +27,26 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("End time cannot be before start time");
         }
 
-        Event eventToSave = new Event(request.name(), request.description(), request.startTime(), request.endTime());
+        Event eventToSave = eventMapper.toEntity(request, null);
         Event savedEvent = eventRepository.save(eventToSave);
 
-        return new EventResponse(
-                savedEvent.getId(),
-                savedEvent.getName(),
-                savedEvent.getDescription(),
-                savedEvent.getStartTime(),
-                savedEvent.getEndTime());
+        return eventMapper.toResponse(savedEvent);
     }
 
     @Override
     public EventResponse getEventById(UUID eventId) {
         return eventRepository.findById(eventId)
-                .map(event -> new EventResponse(
-                        event.getId(),
-                        event.getName(),
-                        event.getDescription(),
-                        event.getStartTime(),
-                        event.getEndTime()))
+                .map(eventMapper::toResponse)
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + eventId + " not found"));
     }
 
     @Override
     public EventResponse updateEvent(UUID id, CreateEventRequest request) {
-        
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + id + " not found"));
 
-        existingEvent.setName(request.name());
-        existingEvent.setDescription(request.description());
-        existingEvent.setStartTime(request.startTime());
-        existingEvent.setEndTime(request.endTime());
+        Event savedEvent = eventRepository.save(eventMapper.toEntity(request, existingEvent));
 
-        Event savedEvent = eventRepository.save(existingEvent);
-
-        return new EventResponse(
-                savedEvent.getId(),
-                savedEvent.getName(),
-                savedEvent.getDescription(),
-                savedEvent.getStartTime(),
-                savedEvent.getEndTime());
+        return eventMapper.toResponse(savedEvent);
     }
 }

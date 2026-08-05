@@ -3,11 +3,12 @@ package com.example.reentry.service;
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.dto.EventResponse;
 import com.example.reentry.exception.EventNotFoundException;
+import com.example.reentry.mapper.EventMapper;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,11 +25,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class EventServiceImplTest {
 
-    @InjectMocks
     private EventServiceImpl eventService;
 
     @Mock
     private EventRepository eventRepository;
+
+    @BeforeEach
+    void setUp() {
+        eventService = new EventServiceImpl(eventRepository, new EventMapper());
+    }
 
     @Test
     void shouldRejectEventWhenEndTimeIsBeforeStartTime() {
