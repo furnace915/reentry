@@ -4,7 +4,6 @@ import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -84,7 +83,6 @@ class EventAcceptanceTest {
                 .andExpect(jsonPath("$.description").value("Annual checkup"));
     }
 
-    @Disabled("driving internals via inner-loop tests")
     @Test
     void shouldUpdateCalendarEventForFamily() throws Exception {
         Event existingEvent = new Event(

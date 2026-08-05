@@ -49,6 +49,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventResponse updateEvent(UUID id, CreateEventRequest request) {
+        
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + id + " not found"));
 
