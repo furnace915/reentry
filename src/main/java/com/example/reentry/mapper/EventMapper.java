@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventMapper {
 
-    public Event toEntity(CreateEventRequest request, Event existingEvent) {
-        Event event = existingEvent != null
-                ? existingEvent
-                : new Event(request.name(), request.description(), request.startTime(), request.endTime());
+    public Event toEntity(CreateEventRequest request) {
+        return toEntity(request, new Event(request.name(), request.description(), request.startTime(), request.endTime()));
+    }
 
-        event.setName(request.name());
-        event.setDescription(request.description());
-        event.setStartTime(request.startTime());
-        event.setEndTime(request.endTime());
+    public Event toEntity(CreateEventRequest request, Event target) {
+        target.setName(request.name());
+        target.setDescription(request.description());
+        target.setStartTime(request.startTime());
+        target.setEndTime(request.endTime());
 
-        return event;
+        return target;
     }
 
     public EventResponse toResponse(Event event) {

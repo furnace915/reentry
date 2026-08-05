@@ -16,14 +16,14 @@ class EventMapperTest {
     private final EventMapper eventMapper = new EventMapper();
 
     @Test
-    void shouldCreateNewEntityWhenExistingEventIsNull() {
+    void shouldCreateNewEntityWhenNoExistingEventProvided() {
         CreateEventRequest request = new CreateEventRequest(
                 "Dentist appointment",
                 "Annual checkup",
                 LocalDateTime.of(2026, 8, 1, 10, 0),
                 LocalDateTime.of(2026, 8, 1, 11, 0));
 
-        Event actual = eventMapper.toEntity(request, null);
+        Event actual = eventMapper.toEntity(request);
 
         assertThat(actual)
                 .returns(request.name(), Event::getName)

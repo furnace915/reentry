@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("End time cannot be before start time");
         }
 
-        Event eventToSave = eventMapper.toEntity(request, null);
+        Event eventToSave = eventMapper.toEntity(request);
         Event savedEvent = eventRepository.save(eventToSave);
 
         return eventMapper.toResponse(savedEvent);
