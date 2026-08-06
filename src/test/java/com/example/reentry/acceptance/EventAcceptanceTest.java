@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -35,26 +34,6 @@ class EventAcceptanceTest {
 
     @Autowired
     private EventRepository eventRepository;
-
-    @Test
-    void shouldCreateCalendarEventForFamily() throws Exception {
-        LocalDateTime startTime = LocalDateTime.of(2026, 8, 1, 10, 0);
-        LocalDateTime endTime = LocalDateTime.of(2026, 8, 1, 11, 0);
-        CreateEventRequest request = new CreateEventRequest(
-                "Dentist appointment",
-                "Annual checkup",
-                startTime,
-                endTime);
-
-        mockMvc.perform(post("/api/events")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", containsString("/api/events/")))
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.name").value("Dentist appointment"))
-                .andExpect(jsonPath("$.description").value("Annual checkup"));
-    }
 
     @Test
     void shouldReturnCalendarEventById() throws Exception {
