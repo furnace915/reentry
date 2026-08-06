@@ -8,6 +8,8 @@ import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -48,5 +50,10 @@ public class EventServiceImpl implements EventService {
         Event savedEvent = eventRepository.save(eventMapper.toEntity(request, existingEvent));
 
         return eventMapper.toResponse(savedEvent);
+    }
+
+    @Override
+    public List<EventResponse> getEventsForFamilyMember(UUID familyMemberId) {
+        return Collections.emptyList(); // Placeholder for actual implementation
     }
 }

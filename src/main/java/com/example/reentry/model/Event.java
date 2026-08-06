@@ -1,14 +1,13 @@
 package com.example.reentry.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +22,21 @@ public class Event {
     LocalDateTime startTime;
     LocalDateTime endTime;
 
+    public Event(UUID id, String name, String description, LocalDateTime startTime, LocalDateTime endTime, Collection<FamilyMember> familyMembers) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.familyMembers = familyMembers;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "event_family_member",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "family_member_id"))
+    private Collection<FamilyMember> familyMembers;
+
     // Required by JPA/Hibernate, which instantiates entities via reflection when loading from the database.
     protected Event() {
     }
@@ -32,6 +46,7 @@ public class Event {
         this.description = description;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.familyMembers = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -68,5 +83,9 @@ public class Event {
 
     public void setEndTime(@NotNull LocalDateTime localDateTime) {
         this.endTime = localDateTime;
+    }
+
+    public Collection<FamilyMember> getFamilyMembers() {
+        return familyMembers;
     }
 }

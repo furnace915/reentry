@@ -13,6 +13,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -216,5 +217,23 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.id").value(eventId.toString()))
                 .andExpect(jsonPath("$.name").value("Updated Event"))
                 .andExpect(jsonPath("$.description").value("Updated Description"));
+    }
+
+    @Test
+    void shouldReturnEventsForFamilyMember() throws Exception {
+        UUID familyMemberId = UUID.randomUUID();
+        EventResponse event = new EventResponse(
+                UUID.randomUUID(),
+                "Family dinner",
+                "Everyone at the table",
+                LocalDateTime.of(2026, 8, 6, 18, 0),
+                LocalDateTime.of(2026, 8, 6, 19, 0));
+
+        when(eventService.getEventsForFamilyMember(familyMemberId)).thenReturn(List.of(event));
+
+        mockMvc.perform(get("/api/events").param("familyMemberId", familyMemberId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Family dinner"))
+                .andExpect(jsonPath("$[0].description").value("Everyone at the table"));
     }
 }
