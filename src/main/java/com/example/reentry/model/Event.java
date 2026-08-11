@@ -22,23 +22,14 @@ public class Event {
     LocalDateTime startTime;
     LocalDateTime endTime;
 
-    public Event(UUID id, String name, String description, LocalDateTime startTime, LocalDateTime endTime, Collection<FamilyMember> familyMembers) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.familyMembers = familyMembers;
-    }
-
     @ManyToMany
     @JoinTable(name = "event_family_member",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "family_member_id"))
     private Collection<FamilyMember> familyMembers;
 
-    // Required by JPA/Hibernate, which instantiates entities via reflection when loading from the database.
     protected Event() {
+        // Required by JPA/Hibernate, which instantiates entities via reflection when loading from the database.
     }
 
     public Event(String name, String description, LocalDateTime startTime, LocalDateTime endTime) {
