@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: reentry-postgres
+    environment:
+      POSTGRES_DB: reentry
+      POSTGRES_USER: reentry
+      POSTGRES_PASSWORD: reentry
+    ports:
+      - "5432:5432"
+    volumes:
+      - reentry-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  reentry-postgres-data:
