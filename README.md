@@ -24,14 +24,41 @@ Google Docs publishing is intentionally deferred until the core backend, securit
 - Spring Data JPA
 - Bean Validation
 - H2 for tests
-- MySQL driver for production
+- PostgreSQL for production and local development, run via Docker Compose
+- Flyway for schema migrations
+- springdoc-openapi (Swagger UI) for API documentation
 - JUnit 5 / Spring Boot Test
+
+## Quick Start (Local Development)
+
+1. Make sure Docker Desktop is running.
+2. Start a local Postgres instance:
+   ```bash
+   docker compose up -d
+   ```
+3. Run the app (uses the `local` profile by default, configured in `application-local.yml`):
+   ```bash
+   ./gradlew bootRun
+   ```
+4. Explore:
+   - API base URL: `http://localhost:8080/api/events`
+   - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+   - Browse the database with a client such as [TablePlus](https://tableplus.com) or pgAdmin — connect to host `localhost`, port `5432`, database/user/password all `reentry`.
+
+### Shutting down
+
+```bash
+# Stop the app with Ctrl+C, then:
+docker compose down
+```
+
+This removes the Postgres container but preserves your data in a named Docker volume (`reentry-postgres-data`). Add `-v` to `docker compose down` only if you want to wipe that data too.
 
 ## Open in an IDE
 
 Open the root `reentry` folder in IntelliJ IDEA, VS Code, or Eclipse as a Gradle project.
 
-Useful commands:
+Other useful commands:
 
 ```bash
 ./gradlew test
@@ -39,10 +66,6 @@ Useful commands:
 
 ```bash
 ./gradlew clean build
-```
-
-```bash
-./gradlew bootRun
 ```
 
 ## Phase 1 Status
