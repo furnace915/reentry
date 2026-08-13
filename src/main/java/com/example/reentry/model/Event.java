@@ -21,6 +21,7 @@ public class Event {
     String description;
     LocalDateTime startTime;
     LocalDateTime endTime;
+    boolean familyEvent;
 
     @ManyToMany
     @JoinTable(name = "event_family_member",
@@ -58,6 +59,14 @@ public class Event {
 
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    public boolean isFamilyEvent() {
+        return familyEvent;
+    }
+
+    public void setFamilyEvent(boolean familyEvent) {
+        this.familyEvent = familyEvent;
     }
 
     public void setDescription(String description) {

@@ -21,7 +21,8 @@ class EventMapperTest {
                 "Dentist appointment",
                 "Annual checkup",
                 LocalDateTime.of(2026, 8, 1, 10, 0),
-                LocalDateTime.of(2026, 8, 1, 11, 0));
+                LocalDateTime.of(2026, 8, 1, 11, 0),
+                false);
 
         Event actual = eventMapper.toEntity(request);
 
@@ -46,7 +47,8 @@ class EventMapperTest {
                 "Dentist appointment (rescheduled)",
                 "Annual checkup - moved a day",
                 LocalDateTime.of(2026, 8, 2, 14, 0),
-                LocalDateTime.of(2026, 8, 2, 15, 0));
+                LocalDateTime.of(2026, 8, 2, 15, 0),
+                false);
 
         Event actual = eventMapper.toEntity(updateRequest, existingEvent);
 

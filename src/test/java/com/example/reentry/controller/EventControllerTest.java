@@ -43,14 +43,16 @@ class EventControllerTest {
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
         UUID savedEventId = UUID.fromString("11111111-1111-1111-1111-111111111111");
         EventResponse savedEvent = new EventResponse(
                 savedEventId,
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         when(eventService.createEvent(any(CreateEventRequest.class))).thenReturn(savedEvent);
 
@@ -72,7 +74,8 @@ class EventControllerTest {
                 "",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +93,8 @@ class EventControllerTest {
                 "Valid Title",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +112,8 @@ class EventControllerTest {
                 "Valid Title",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +131,8 @@ class EventControllerTest {
                 "Valid Title",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         when(eventService.createEvent(any(CreateEventRequest.class)))
                 .thenThrow(new IllegalArgumentException("End time cannot be before start time"));
@@ -147,7 +153,8 @@ class EventControllerTest {
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         when(eventService.getEventById(eventId)).thenReturn(existingEvent);
 
@@ -179,7 +186,8 @@ class EventControllerTest {
                 "Updated Event",
                 "Updated Description",
                 LocalDateTime.now(),
-                LocalDateTime.now().plusHours(1)
+                LocalDateTime.now().plusHours(1),
+                false
         );
 
         when(eventService.updateEvent(eventId, eventRequest)).thenThrow(new EventNotFoundException(expectedMessage));
@@ -200,13 +208,15 @@ class EventControllerTest {
                 "Updated Event",
                 "Updated Description",
                 startTime,
-                endTime);
+                endTime,
+                false);
         EventResponse updatedEvent = new EventResponse(
                 eventId,
                 "Updated Event",
                 "Updated Description",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         when(eventService.updateEvent(eventId, updateRequest)).thenReturn(updatedEvent);
 
@@ -227,7 +237,8 @@ class EventControllerTest {
                 "Family dinner",
                 "Everyone at the table",
                 LocalDateTime.of(2026, 8, 6, 18, 0),
-                LocalDateTime.of(2026, 8, 6, 19, 0));
+                LocalDateTime.of(2026, 8, 6, 19, 0),
+                true);
 
         when(eventService.getEventsForFamilyMember(familyMemberId)).thenReturn(List.of(event));
 

@@ -49,7 +49,8 @@ class EventAcceptanceTest {
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         String createResponse = mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +82,8 @@ class EventAcceptanceTest {
                 "Dentist appointment (rescheduled)",
                 "Annual checkup - moved a day",
                 LocalDateTime.of(2026, 8, 2, 14, 0),
-                LocalDateTime.of(2026, 8, 2, 15, 0));
+                LocalDateTime.of(2026, 8, 2, 15, 0),
+                false);
 
         mockMvc.perform(put("/api/events/{id}", savedEvent.getId())
                         .contentType(MediaType.APPLICATION_JSON)

@@ -21,5 +21,8 @@ public record EventResponse(
         LocalDateTime startTime,
 
         @Schema(description = "End date and time", example = "2026-08-11T11:00:00")
-        LocalDateTime endTime
+        LocalDateTime endTime,
+
+        @Schema(description = "True if this event applies to the whole family, rather than specific individuals", example = "false")
+        boolean familyEvent
 ) {}

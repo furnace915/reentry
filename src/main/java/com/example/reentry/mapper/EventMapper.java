@@ -17,6 +17,7 @@ public class EventMapper {
         target.setDescription(request.description());
         target.setStartTime(request.startTime());
         target.setEndTime(request.endTime());
+        target.setFamilyEvent(request.familyEvent());
 
         return target;
     }
@@ -27,6 +28,7 @@ public class EventMapper {
                 event.getName(),
                 event.getDescription(),
                 event.getStartTime(),
-                event.getEndTime());
+                event.getEndTime(),
+                event.isFamilyEvent());
     }
 }

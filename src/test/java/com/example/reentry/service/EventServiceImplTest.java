@@ -42,7 +42,8 @@ class EventServiceImplTest {
                 "Dentist appointment",
                 "Annual checkup",
                 startTime,
-                endTime);
+                endTime,
+                false);
 
         assertThrows(IllegalArgumentException.class, () -> eventService.createEvent(request));
     }
@@ -53,11 +54,12 @@ class EventServiceImplTest {
                 "Dentist appointment",
                 "Annual checkup",
                 LocalDateTime.of(2026, 8, 1, 10, 0),
-                LocalDateTime.of(2026, 8, 1, 11, 0));
+                LocalDateTime.of(2026, 8, 1, 11, 0),
+                false);
         Event eventToSave = mock(Event.class);
         Event savedEvent = mock(Event.class);
         EventResponse expectedResponse = new EventResponse(
-                UUID.randomUUID(), "Dentist appointment", "Annual checkup", request.startTime(), request.endTime());
+                UUID.randomUUID(), "Dentist appointment", "Annual checkup", request.startTime(), request.endTime(), false);
 
         when(eventMapper.toEntity(request)).thenReturn(eventToSave);
         when(eventRepository.save(eventToSave)).thenReturn(savedEvent);
@@ -77,7 +79,7 @@ class EventServiceImplTest {
         Event existingEvent = mock(Event.class);
         EventResponse expectedResponse = new EventResponse(
                 eventId, "Dentist appointment", "Annual checkup",
-                LocalDateTime.of(2026, 8, 1, 10, 0), LocalDateTime.of(2026, 8, 1, 11, 0));
+                LocalDateTime.of(2026, 8, 1, 10, 0), LocalDateTime.of(2026, 8, 1, 11, 0), false);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
         when(eventMapper.toResponse(existingEvent)).thenReturn(expectedResponse);
@@ -106,10 +108,11 @@ class EventServiceImplTest {
                 "Dentist appointment (rescheduled)",
                 "Annual checkup - moved a day",
                 LocalDateTime.of(2026, 8, 2, 14, 0),
-                LocalDateTime.of(2026, 8, 2, 15, 0));
+                LocalDateTime.of(2026, 8, 2, 15, 0),
+                false);
         EventResponse expectedResponse = new EventResponse(
                 eventId, updateRequest.name(), updateRequest.description(),
-                updateRequest.startTime(), updateRequest.endTime());
+                updateRequest.startTime(), updateRequest.endTime(), false);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
         when(eventMapper.toEntity(updateRequest, existingEvent)).thenReturn(updatedEvent);
@@ -131,7 +134,8 @@ class EventServiceImplTest {
                 "Dentist appointment (rescheduled)",
                 "Annual checkup - moved a day",
                 LocalDateTime.of(2026, 8, 2, 14, 0),
-                LocalDateTime.of(2026, 8, 2, 15, 0));
+                LocalDateTime.of(2026, 8, 2, 15, 0),
+                false);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
 
