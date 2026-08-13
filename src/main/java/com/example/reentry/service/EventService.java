@@ -16,4 +16,6 @@ public interface EventService {
     EventResponse updateEvent(UUID id, @Valid CreateEventRequest request);
 
     List<EventResponse> getEventsForFamilyMember(UUID familyMemberId);
+
+    List<EventResponse> getAllEvents();
 }

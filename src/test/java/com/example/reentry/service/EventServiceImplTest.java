@@ -128,6 +128,26 @@ class EventServiceImplTest {
     }
 
     @Test
+    void shouldReturnAllEvents() {
+        Event firstEvent = mock(Event.class);
+        Event secondEvent = mock(Event.class);
+        EventResponse firstResponse = new EventResponse(
+                UUID.randomUUID(), "Dentist appointment", "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0), LocalDateTime.of(2026, 8, 1, 11, 0), false);
+        EventResponse secondResponse = new EventResponse(
+                UUID.randomUUID(), "Family dinner", "Everyone at the table",
+                LocalDateTime.of(2026, 8, 6, 18, 0), LocalDateTime.of(2026, 8, 6, 19, 0), true);
+
+        when(eventRepository.findAll()).thenReturn(java.util.List.of(firstEvent, secondEvent));
+        when(eventMapper.toResponse(firstEvent)).thenReturn(firstResponse);
+        when(eventMapper.toResponse(secondEvent)).thenReturn(secondResponse);
+
+        java.util.List<EventResponse> actual = eventService.getAllEvents();
+
+        assertThat(actual).containsExactly(firstResponse, secondResponse);
+    }
+
+    @Test
     void shouldThrowEventNotFoundExceptionWhenUpdatingNonexistentEvent() {
         UUID eventId = UUID.randomUUID();
         CreateEventRequest updateRequest = new CreateEventRequest(

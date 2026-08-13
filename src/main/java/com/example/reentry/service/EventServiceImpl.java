@@ -56,4 +56,11 @@ public class EventServiceImpl implements EventService {
     public List<EventResponse> getEventsForFamilyMember(UUID familyMemberId) {
         return Collections.emptyList(); // Placeholder for actual implementation
     }
+
+    @Override
+    public List<EventResponse> getAllEvents() {
+        return eventRepository.findAll().stream()
+                .map(eventMapper::toResponse)
+                .toList();
+    }
 }

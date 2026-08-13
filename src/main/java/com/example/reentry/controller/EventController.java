@@ -30,17 +30,21 @@ public class EventController {
     }
 
     @Operation(
-            summary = "List events for a family member",
-            description = "Returns every event associated with the given family member id."
+            summary = "List events",
+            description = "Returns every event associated with the given family member id, " +
+                    "or all events if no familyMemberId is provided."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Events returned (possibly empty)")
     })
     @GetMapping
-    public ResponseEntity<List<EventResponse>> getEventsForFamilyMember(
-            @Parameter(description = "Id of the family member to filter events by", required = true)
-            @RequestParam UUID familyMemberId) {
-        return ResponseEntity.ok(eventService.getEventsForFamilyMember(familyMemberId));
+    public ResponseEntity<List<EventResponse>> getEvents(
+            @Parameter(description = "Id of the family member to filter events by")
+            @RequestParam(required = false) UUID familyMemberId) {
+        if (familyMemberId != null) {
+            return ResponseEntity.ok(eventService.getEventsForFamilyMember(familyMemberId));
+        }
+        return ResponseEntity.ok(eventService.getAllEvents());
     }
 
     @Operation(

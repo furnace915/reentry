@@ -247,4 +247,33 @@ class EventControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Family dinner"))
                 .andExpect(jsonPath("$[0].description").value("Everyone at the table"));
     }
+
+    @Test
+    void shouldReturnAllEventsWhenNoFamilyMemberIdProvided() throws Exception {
+        EventResponse firstEvent = new EventResponse(
+                UUID.randomUUID(),
+                "Dentist appointment",
+                "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0),
+                LocalDateTime.of(2026, 8, 1, 11, 0),
+                false);
+        EventResponse secondEvent = new EventResponse(
+                UUID.randomUUID(),
+                "Family dinner",
+                "Everyone at the table",
+                LocalDateTime.of(2026, 8, 6, 18, 0),
+                LocalDateTime.of(2026, 8, 6, 19, 0),
+                true);
+
+        when(eventService.getAllEvents()).thenReturn(List.of(firstEvent, secondEvent));
+
+        mockMvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Dentist appointment"))
+                .andExpect(jsonPath("$[0].description").value("Annual checkup"))
+                .andExpect(jsonPath("$[1].name").value("Family dinner"))
+                .andExpect(jsonPath("$[1].description").value("Everyone at the table"));
+
+        verify(eventService, never()).getEventsForFamilyMember(any());
+    }
 }

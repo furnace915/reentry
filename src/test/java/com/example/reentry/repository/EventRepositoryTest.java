@@ -1,6 +1,7 @@
 package com.example.reentry.repository;
 
 import com.example.reentry.model.Event;
+import com.example.reentry.model.FamilyMember;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +19,32 @@ class EventRepositoryTest {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private FamilyMemberRepository familyMemberRepository;
+
+    @Test
+    void shouldReturnAllEventsRegardlessOfFamilyMemberAssignment() {
+        FamilyMember mom = familyMemberRepository.save(new FamilyMember("Mom"));
+
+        Event assignedEvent = new Event(
+                "Mom's dentist appointment",
+                "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0),
+                LocalDateTime.of(2026, 8, 1, 11, 0));
+        assignedEvent.getFamilyMembers().add(mom);
+        Event savedAssignedEvent = eventRepository.save(assignedEvent);
+
+        Event unassignedEvent = eventRepository.save(new Event(
+                "Family dinner",
+                "Everyone at the table",
+                LocalDateTime.of(2026, 8, 6, 18, 0),
+                LocalDateTime.of(2026, 8, 6, 19, 0)));
+
+        assertThat(eventRepository.findAll())
+                .extracting(Event::getId)
+                .contains(savedAssignedEvent.getId(), unassignedEvent.getId());
+    }
 
     @Test
     void shouldSaveAndFindEventById() {
