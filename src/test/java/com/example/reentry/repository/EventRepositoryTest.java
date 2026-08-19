@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,6 +43,40 @@ class EventRepositoryTest {
         assertThat(eventRepository.findAll())
                 .extracting(Event::getId)
                 .contains(savedAssignedEvent.getId(), unassignedEvent.getId());
+    }
+
+    @Test
+    void shouldReturnEventsAssignedToFamilyMemberAndFamilyWideEvents() {
+        FamilyMember mom = familyMemberRepository.save(new FamilyMember("Mom"));
+        FamilyMember dad = familyMemberRepository.save(new FamilyMember("Dad"));
+
+        Event momsEvent = new Event(
+                "Mom's dentist appointment",
+                "Annual checkup",
+                LocalDateTime.of(2026, 8, 10, 9, 0),
+                LocalDateTime.of(2026, 8, 10, 10, 0));
+        momsEvent.getFamilyMembers().add(mom);
+        Event savedMomsEvent = eventRepository.save(momsEvent);
+
+        Event dadsEvent = new Event(
+                "Dad's work meeting",
+                "Quarterly review",
+                LocalDateTime.of(2026, 8, 10, 11, 0),
+                LocalDateTime.of(2026, 8, 10, 12, 0));
+        dadsEvent.getFamilyMembers().add(dad);
+        eventRepository.save(dadsEvent);
+
+        Event familyDinner = new Event(
+                "Family dinner",
+                "Everyone at the table",
+                LocalDateTime.of(2026, 8, 10, 18, 0),
+                LocalDateTime.of(2026, 8, 10, 19, 0));
+        familyDinner.setFamilyEvent(true);
+        Event savedFamilyDinner = eventRepository.save(familyDinner);
+
+        assertThat(eventRepository.findVisibleToFamilyMember(mom.getId()))
+                .extracting(Event::getId)
+                .containsExactlyInAnyOrder(savedMomsEvent.getId(), savedFamilyDinner.getId());
     }
 
     @Test

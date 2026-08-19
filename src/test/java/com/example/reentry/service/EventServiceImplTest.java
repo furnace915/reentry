@@ -148,6 +148,28 @@ class EventServiceImplTest {
     }
 
     @Test
+    void shouldReturnEventsVisibleToFamilyMember() {
+        UUID familyMemberId = UUID.randomUUID();
+        Event momsEvent = mock(Event.class);
+        Event familyEvent = mock(Event.class);
+        EventResponse momsResponse = new EventResponse(
+                UUID.randomUUID(), "Dentist appointment", "Annual checkup",
+                LocalDateTime.of(2026, 8, 1, 10, 0), LocalDateTime.of(2026, 8, 1, 11, 0), false);
+        EventResponse familyResponse = new EventResponse(
+                UUID.randomUUID(), "Family dinner", "Everyone at the table",
+                LocalDateTime.of(2026, 8, 6, 18, 0), LocalDateTime.of(2026, 8, 6, 19, 0), true);
+
+        when(eventRepository.findVisibleToFamilyMember(familyMemberId))
+                .thenReturn(java.util.List.of(momsEvent, familyEvent));
+        when(eventMapper.toResponse(momsEvent)).thenReturn(momsResponse);
+        when(eventMapper.toResponse(familyEvent)).thenReturn(familyResponse);
+
+        java.util.List<EventResponse> actual = eventService.getEventsForFamilyMember(familyMemberId);
+
+        assertThat(actual).containsExactly(momsResponse, familyResponse);
+    }
+
+    @Test
     void shouldThrowEventNotFoundExceptionWhenUpdatingNonexistentEvent() {
         UUID eventId = UUID.randomUUID();
         CreateEventRequest updateRequest = new CreateEventRequest(

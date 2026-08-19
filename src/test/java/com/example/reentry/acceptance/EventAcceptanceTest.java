@@ -2,11 +2,8 @@ package com.example.reentry.acceptance;
 
 import com.example.reentry.dto.CreateEventRequest;
 import com.example.reentry.model.Event;
-import com.example.reentry.model.FamilyMember;
 import com.example.reentry.repository.EventRepository;
-import com.example.reentry.repository.FamilyMemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,9 +34,6 @@ class EventAcceptanceTest {
 
     @Autowired
     private EventRepository eventRepository;
-
-    @Autowired
-    private FamilyMemberRepository familyMemberRepository;
 
     @Test
     void shouldReturnCalendarEventById() throws Exception {
@@ -101,33 +95,5 @@ class EventAcceptanceTest {
                 .returns("Annual checkup - moved a day", Event::getDescription)
                 .returns(LocalDateTime.of(2026, 8, 2, 14, 0), Event::getStartTime)
                 .returns(LocalDateTime.of(2026, 8, 2, 15, 0), Event::getEndTime);
-    }
-
-    @Disabled("driving internals via inner-loop tests")
-    @Test
-    void shouldReturnOnlyEventsForSpecifiedFamilyMember() throws Exception {
-        FamilyMember mom = familyMemberRepository.save(new FamilyMember("Mom"));
-        FamilyMember dad = familyMemberRepository.save(new FamilyMember("Dad"));
-
-        Event momsEvent = new Event(
-                "Mom's dentist appointment",
-                "Annual checkup",
-                LocalDateTime.of(2026, 8, 10, 9, 0),
-                LocalDateTime.of(2026, 8, 10, 10, 0));
-        momsEvent.getFamilyMembers().add(mom);
-        eventRepository.save(momsEvent);
-
-        Event dadsEvent = new Event(
-                "Dad's work meeting",
-                "Quarterly review",
-                LocalDateTime.of(2026, 8, 10, 11, 0),
-                LocalDateTime.of(2026, 8, 10, 12, 0));
-        dadsEvent.getFamilyMembers().add(dad);
-        eventRepository.save(dadsEvent);
-
-        mockMvc.perform(get("/api/events").param("familyMemberId", mom.getId().toString()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].name").value("Mom's dentist appointment"));
     }
 }

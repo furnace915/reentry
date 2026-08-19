@@ -8,7 +8,6 @@ import com.example.reentry.model.Event;
 import com.example.reentry.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +53,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventResponse> getEventsForFamilyMember(UUID familyMemberId) {
-        return Collections.emptyList(); // Placeholder for actual implementation
+        return eventRepository.findVisibleToFamilyMember(familyMemberId).stream()
+                .map(eventMapper::toResponse)
+                .toList();
     }
 
     @Override
